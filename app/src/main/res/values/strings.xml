@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AcousticSoundboard</string>
+    <string name="main_menu">Menu</string>
 </resources>
