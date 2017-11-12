@@ -13,9 +13,9 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 
 ## Utilisation des Notions évaluées
 1. ##	RecyclerView
-- [ ] Permettre de visualiser l'ensemble des traces audio dans l'application.
+- [x] Permettre de visualiser l'ensemble des traces audio dans l'application.
 2. ##	Préférences Android
-- [ ] Changer les couleurs d'accént de l'application.
+- [ ] Changer les couleurs d'accent de l'application.
 - [ ] Modifier la language de l'interface.
 3. ## SQLite
 - [ ] Stocker l'information supplémentaire associée aux fichiers audio (image, description, date).
@@ -31,7 +31,7 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 - [ ] Faire jouer des traces sonores à partir du menu principal Android.
 9. ##	Manifeste et ressources (Icônes applicatives et multilinguisme français+anglais)
 - [ ] Multilangue en francais et en anglais.
-- [ ] Icône personnalisée pour l'application.
+- [x] Icône personnalisée pour l'application.
 10. ##	Géolocalisation (mode au choix)
 - [ ] Changer la langue par défaut en fonction de l'endroit d'utilisation.
 - [ ] Changer le fuseau horaire pour la date associée à l'insertion du fichier audio.
