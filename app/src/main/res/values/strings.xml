@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">AcousticSoundboard</string>
     <string name="main_menu">Menu</string>
+    <string name="edit">Edit</string>
 </resources>

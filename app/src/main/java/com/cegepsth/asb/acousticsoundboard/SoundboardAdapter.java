@@ -1,7 +1,10 @@
 package com.cegepsth.asb.acousticsoundboard;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -11,6 +14,7 @@ import android.widget.TextView;
 
 public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.ViewHolder> {
     private String[] mDataset;
+    private Context mContext;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -18,6 +22,7 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView mTextView;
+
         public ViewHolder(TextView v) {
             super(v);
             mTextView = v;
@@ -25,7 +30,8 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.Vi
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SoundboardAdapter(String[] myDataset) {
+    public SoundboardAdapter(String[] myDataset, Context context) {
+        mContext = context;
         mDataset = myDataset;
     }
 
@@ -43,11 +49,18 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.Vi
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.mTextView.setText(mDataset[position]);
-
+        holder.mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, PlayerActivity.class);
+                intent.putExtra("Name", mDataset[position]);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
