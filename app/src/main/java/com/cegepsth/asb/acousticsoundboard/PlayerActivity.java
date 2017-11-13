@@ -1,19 +1,15 @@
 package com.cegepsth.asb.acousticsoundboard;
 
-import android.media.Image;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class PlayerActivity extends AppCompatActivity {
     private MediaPlayer player;
@@ -42,7 +38,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_player);
         // Init player
-        createPlayer();
+        createPlayer(bundle.getString("Name"), false);
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -116,8 +112,21 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     // Helper to handle player state
-    public void createPlayer() {
-        player = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
+    public void createPlayer(String ressource, boolean isURL) {
+        if(isURL) {
+            player = MediaPlayer.create(getApplicationContext(), Uri.parse(ressource));
+        } else {
+            switch (ressource) {
+                case "Wrong":
+                    player = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
+                    break;
+                case "You spin me":
+                    player = MediaPlayer.create(getApplicationContext(), R.raw.youspin);
+                    break;
+                default:
+                    player = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
+            }
+        }
     }
 
     public void playSong() {

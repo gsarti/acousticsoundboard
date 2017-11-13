@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AcousticSoundboard</string>
+    <string name="main_menu">Menu</string>
+    <string name="edit">Modifier</string>
+    <string name="language">Langue</string>
+    <string name="theme">Theme</string>
+    <string name="themeDark">Theme Foncé</string>
+    <string name="themeLight">Theme Clair</string>
+    <string name="settings">Réglage</string>
+</resources>

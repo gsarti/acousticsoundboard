@@ -65,9 +65,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_play:
-                Intent intent = new Intent(this, PlayerActivity.class);
+                intent = new Intent(this, PlayerActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
             default:
