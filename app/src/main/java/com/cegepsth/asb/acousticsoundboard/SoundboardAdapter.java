@@ -2,11 +2,13 @@ package com.cegepsth.asb.acousticsoundboard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by NSA on 11/3/2017.
@@ -56,9 +58,17 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.Vi
         holder.mTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, PlayerActivity.class);
-                intent.putExtra("Name", mDataset[position]);
-                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, AudioService.class);
+                intent.putExtra("song", mDataset[position]);
+                intent.setAction(AudioTask.ACTION_PLAY_SOUND);
+                mContext.startService(intent);
+            }
+        });
+        holder.mTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(mContext, "LOL", Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.cegepsth.asb.acousticsoundboard;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class PlayerActivity extends AppCompatActivity {
-    private MediaPlayer player;
+    private String songName;
     private boolean songPlaying = false;
     private boolean repeatSong = false;
     private ImageButton btnPlayingState;
@@ -29,7 +30,7 @@ public class PlayerActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -37,6 +38,7 @@ public class PlayerActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         setContentView(R.layout.activity_player);
+        songName = bundle.getString("Name");
         // Init player
         createPlayer(bundle.getString("Name"), false);
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -109,44 +111,32 @@ public class PlayerActivity extends AppCompatActivity {
         // Name
         TextView name = (TextView) findViewById(R.id.txtNom);
         name.setText(bundle.getString("Name"));
-    }
+    }*/
 
-    // Helper to handle player state
-    public void createPlayer(String ressource, boolean isURL) {
-        if(isURL) {
-            player = MediaPlayer.create(getApplicationContext(), Uri.parse(ressource));
-        } else {
-            switch (ressource) {
-                case "Wrong":
-                    player = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
-                    break;
-                case "You spin me":
-                    player = MediaPlayer.create(getApplicationContext(), R.raw.youspin);
-                    break;
-                default:
-                    player = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
-            }
-        }
+    private void createIntent(String action){
+        Intent intent = new Intent(this, AudioService.class);
+        intent.setAction(action);
+        intent.putExtra("song", songName);
+        startService(intent);
     }
 
     public void playSong() {
-        player.start();
+        createIntent(AudioTask.ACTION_PLAY_SOUND);
         songPlaying = true;
         btnPlayingState.setImageResource(android.R.drawable.ic_media_pause);
     }
 
     public void stopSong() {
-        player.stop();
+        createIntent(AudioTask.ACTION_STOP_SOUND);
     }
 
     public void pauseSong() {
-        player.pause();
+        createIntent(AudioTask.ACTION_PAUSE_SOUND);
         btnPlayingState.setImageResource(android.R.drawable.ic_media_play);
     }
 
     public void resumeSong() {
-        player.seekTo(player.getCurrentPosition());
-        player.start();
+        createIntent(AudioTask.ACTION_RESUME_SOUND);
         btnPlayingState.setImageResource(android.R.drawable.ic_media_pause);
     }
 
