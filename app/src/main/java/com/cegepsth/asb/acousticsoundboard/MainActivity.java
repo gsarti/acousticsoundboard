@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 
 public class MainActivity extends AppCompatActivity {
-    private String[] songName = {"Wrong", "You spin me", "Hello World", "Waddup", "Recycler View"};
+    private String[] songName = {"Wrong", "You spin me", "Hello World", "Waddup", "Recycler View", "Jai ldoua"};
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
