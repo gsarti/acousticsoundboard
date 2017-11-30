@@ -16,22 +16,21 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 - [x] Permettre de visualiser l'ensemble des traces audio dans l'application.
 2. ##	Préférences Android
 - [ ] Changer les couleurs d'accent de l'application.
-- [ ] Modifier la language de l'interface.
+- [ ] Modifier la chanson par defaut du widget.
 3. ## SQLite
 - [ ] Stocker l'information supplémentaire associée aux fichiers audio (image, description, date).
 4. ##	Content Provider (mode source et client)
 - [ ] D'autres application pourront visualiser les informations des audio contenus dans l'application.
 5. ##	Service et notifications
-- [ ] Permettre de faire jouer et mettre en pause la trace sonore en cours.
+- [x] Permettre de contrôler l'audio player de l'application.
 6. ##	DataBinding
 - [ ] Gérer l'affichage des informations associées aux traces audio et des options pour la langue de l'application.
 7. ##	Fragments (doit fonctionner dans les deux orientations, en mode Nexus9 et NexusOne)
 - [ ] Permettre un affichage simplifié en portrait et un affichage detaillé (l'image, la description...) dans l'orientation paysage.
 8. ##	Widgets
-- [ ] Faire jouer des traces sonores à partir du menu principal Android.
+- [x] Faire jouer un son favori à partir de l'écran d'accueil Android.
 9. ##	Manifeste et ressources (Icônes applicatives et multilinguisme français+anglais)
 - [ ] Multilangue en francais et en anglais.
 - [x] Icône personnalisée pour l'application.
 10. ##	Géolocalisation (mode au choix)
-- [ ] Changer la langue par défaut en fonction de l'endroit d'utilisation.
-- [ ] Changer le fuseau horaire pour la date associée à l'insertion du fichier audio.
+- [ ] Dark theme en fonction de l'heure

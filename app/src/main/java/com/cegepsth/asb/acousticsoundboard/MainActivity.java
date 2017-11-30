@@ -8,21 +8,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AsyncDatabaseResponse {
     private String[] songName = {"Wrong", "You spin me", "Hello World", "Waddup", "Recycler View", "Jai ldoua"};
+    private List<Sound> soundList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
         MenuInflater inflater = getMenuInflater();
-        /* Use the inflater's inflate method to inflate our menu layout to this menu */
         inflater.inflate(R.menu.soundboard, menu);
-        /* Return true so that the menu is displayed in the Toolbar */
         return true;
     }
     @Override
@@ -30,18 +29,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        mAdapter = new SoundboardAdapter(songName, this);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        new DatabaseConnector(this).getAllSounds();
+        if (soundList.size() == 0){
+            Sound s1 = new Sound("Wrong", "Wrong");
+            Sound s2 = new Sound("Jai ldoua", "Jai ldoua");
+            new DatabaseConnector(this).addSound(s1);
+            new DatabaseConnector(this).addSound(s2);
+            new DatabaseConnector(this).getAllSounds();
+        }
     }
 
     @Override
@@ -59,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void processFinish(Object o) {
+        if (o instanceof List<?>) {
+            soundList = (List<Sound>) o;
+            mAdapter = new SoundboardAdapter(soundList);
+            mRecyclerView.setAdapter(mAdapter);
         }
     }
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:tag="relative_layout_liste_contact"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/iv_image_sound"
+        android:layout_width="73dp"
+        android:layout_height="74dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tv_name_sound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="tv_nom_contact"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/iv_image_sound"
+        android:layout_toEndOf="@+id/iv_image_sound"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp" />
+
+    <TextView
+        android:id="@+id/tv_duration_sound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="tv_tel_contact"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/tv_name_sound"
+        android:layout_toEndOf="@+id/tv_name_sound"
+        android:layout_marginLeft="59dp"
+        android:layout_marginStart="59dp" />
+
+</RelativeLayout>

@@ -36,6 +36,9 @@ public class AudioService extends IntentService{
                 case "You spin me":
                     player = MediaPlayer.create(getApplicationContext(), R.raw.youspin);
                     break;
+                case "Jai ldoua":
+                    player = MediaPlayer.create(getApplicationContext(), R.raw.jaildoua);
+                    break;
                 default:
                     player = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
             }

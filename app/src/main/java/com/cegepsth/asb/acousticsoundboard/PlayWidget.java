@@ -18,8 +18,10 @@ public class PlayWidget extends AppWidgetProvider {
                                 int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.play_widget);
-        Intent intent = new Intent(context, PlayInstantly.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Intent intent = new Intent(context, AudioService.class);
+        intent.putExtra("song", "Jai ldoua");
+        intent.setAction(AudioTask.ACTION_PLAY_SOUND);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.imgWidget, pendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);

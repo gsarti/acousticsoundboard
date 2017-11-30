@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".PlayerActivity" />
         <activity android:name=".SettingsActivity" />
+        <service android:name=".AudioService"
+         android:exported="false"/>
 
         <receiver android:name=".PlayWidget">
             <intent-filter>
