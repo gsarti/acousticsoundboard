@@ -39,6 +39,12 @@ public class AudioService extends IntentService{
                 case "Jai ldoua":
                     player = MediaPlayer.create(getApplicationContext(), R.raw.jaildoua);
                     break;
+                case "Cegep STH":
+                    player = MediaPlayer.create(getApplicationContext(), R.raw.cegepsth);
+                    break;
+                case "Fin de Session":
+                    player = MediaPlayer.create(getApplicationContext(), R.raw.findesession);
+                    break;
                 default:
                     player = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
             }

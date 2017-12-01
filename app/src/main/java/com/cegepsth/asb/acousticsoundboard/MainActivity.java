@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AsyncDatabaseResponse {
-    private String[] songName = {"Wrong", "You spin me", "Hello World", "Waddup", "Recycler View", "Jai ldoua"};
     private List<Sound> soundList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -32,13 +31,6 @@ public class MainActivity extends AppCompatActivity implements AsyncDatabaseResp
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         new DatabaseConnector(this).getAllSounds();
-        if (soundList.size() == 0){
-            Sound s1 = new Sound("Wrong", "Wrong");
-            Sound s2 = new Sound("Jai ldoua", "Jai ldoua");
-            new DatabaseConnector(this).addSound(s1);
-            new DatabaseConnector(this).addSound(s2);
-            new DatabaseConnector(this).getAllSounds();
-        }
     }
 
     @Override

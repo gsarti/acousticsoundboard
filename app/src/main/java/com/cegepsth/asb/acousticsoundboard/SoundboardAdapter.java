@@ -77,7 +77,7 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                     Context ctx = view.getContext();
                     PopupMenu menu = new PopupMenu(ctx, view);
                     menu.getMenuInflater()
-                            .inflate(R.menu.soundboard, menu.getMenu());
+                            .inflate(R.menu.more, menu.getMenu());
 
                     //registering popup with OnMenuItemClickListener
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

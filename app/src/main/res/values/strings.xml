@@ -9,4 +9,7 @@
     <string name="settings">Settings</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="edit_sound">Edit</string>
+    <string name="delete_sound">Delete</string>
+    <string name="favorite_sound">Favorite</string>
 </resources>
