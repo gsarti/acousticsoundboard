@@ -1,4 +1,4 @@
-# A17GEP_Equipe8 - Acoustic Soundboard
+﻿# A17GEP_Equipe8 - Acoustic Soundboard
 
 ## Membres
 * Tristan Deschamps
@@ -18,7 +18,7 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 - [ ] Changer le thème de l'application
 - [ ] Modifier la chanson par defaut du widget.
 3. ## SQLite
-- [ ] Stocker l'information supplémentaire associée aux fichiers audio (image, description, date).
+- [x] Stocker l'information supplémentaire associée aux fichiers audio (image, description, date).
 4. ##	Content Provider (mode source et client)
 - [ ] D'autres application pourront visualiser les informations des audio contenus dans l'application.
 5. ##	Service et notifications
@@ -30,7 +30,7 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 8. ##	Widgets
 - [x] Faire jouer un son favori à partir de l'écran d'accueil Android.
 9. ##	Manifeste et ressources (Icônes applicatives et multilinguisme français+anglais)
-- [ ] Multilangue en francais et en anglais.
+- [x] Multilangue en francais et en anglais.
 - [x] Icône personnalisée pour l'application.
 10. ##	Géolocalisation (mode au choix)
 - [ ] Dark theme en fonction de l'heure
