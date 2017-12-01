@@ -23,9 +23,11 @@ public class MainActivity extends AppCompatActivity implements AsyncDatabaseResp
         inflater.inflate(R.menu.soundboard, menu);
         return true;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeManager.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
