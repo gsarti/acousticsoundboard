@@ -15,7 +15,7 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 1. ##	RecyclerView
 - [x] Permettre de visualiser l'ensemble des traces audio dans l'application.
 2. ##	Préférences Android
-- [ ] Changer les couleurs d'accent de l'application.
+- [ ] Changer le thème de l'application
 - [ ] Modifier la chanson par defaut du widget.
 3. ## SQLite
 - [ ] Stocker l'information supplémentaire associée aux fichiers audio (image, description, date).
