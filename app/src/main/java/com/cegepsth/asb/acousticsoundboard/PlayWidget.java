@@ -3,30 +3,23 @@ package com.cegepsth.asb.acousticsoundboard;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-/**
- * Implementation of App Widget functionality.
- */
-public class PlayWidget extends AppWidgetProvider implements AsyncDatabaseResponse {
-
-    private Sound sound;
-    private Settings settings;
-    private static Context mContext;
+public class PlayWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        mContext = context;
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.play_widget);
-        DatabaseConnector db = new DatabaseConnector(context);
-        db.getSettings();
         Intent intent = new Intent(context, AudioService.class);
-        intent.putExtra("song", "Jai ldoua");
-        intent.setAction(AudioTask.ACTION_PLAY_SOUND);
+        intent.putExtra("songId", 0);
+        intent.setAction(AudioTask.ACTION_PLAY_FAVORITE_SOUND);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.imgWidget, pendingIntent);
 
@@ -49,15 +42,6 @@ public class PlayWidget extends AppWidgetProvider implements AsyncDatabaseRespon
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
-    }
-
-    @Override
-    public void processFinish(Object o) {
-        if (o instanceof Settings){
-            DatabaseConnector db = new DatabaseConnector(mContext);
-            db.getSound(((Settings) o).getFavoriteSong());
-        }
-
     }
 }
 

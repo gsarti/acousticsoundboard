@@ -6,6 +6,7 @@ import android.provider.MediaStore;
 public class AudioTask {
 
     public static final String ACTION_PLAY_SOUND = "play-sound";
+    public static final String ACTION_PLAY_FAVORITE_SOUND = "play-favorite-sound";
     public static final String ACTION_STOP_SOUND = "stop-sound";
     public static final String ACTION_PAUSE_SOUND = "pause-sound";
     public static final String ACTION_RESUME_SOUND = "resume-sound";
@@ -13,6 +14,9 @@ public class AudioTask {
     public static void executeTask(MediaPlayer player, String action) {
         switch (action){
             case ACTION_PLAY_SOUND:
+                playSound(player);
+                break;
+            case ACTION_PLAY_FAVORITE_SOUND:
                 playSound(player);
                 break;
             case ACTION_STOP_SOUND:

@@ -1,7 +1,10 @@
 package com.cegepsth.asb.acousticsoundboard;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,10 +18,12 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.SoundViewHolder> implements AsyncDatabaseResponse {
+import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.BASE_CONTENT_URI;
+import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.PATH_SETTINGS;
+
+public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.SoundViewHolder> {
 
     private List<Sound> mListeSound;
-    private Settings mSettings;
 
     public SoundboardAdapter(List<Sound> soundList) {
         mListeSound = soundList;
@@ -38,7 +43,7 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
             return;
         }
         holder.mNameSound.setText(s.getName());
-        holder.mDurationSound.setText(s.getDuration() + "");
+        holder.mDurationSound.setText((s.getDuration() / 1000) + "");
         holder.itemView.setTag(s.getId());
     }
 
@@ -48,18 +53,12 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
         return mListeSound.size();
     }
 
-    @Override
-    public void processFinish(Object o) {
-        if (o instanceof Settings) {
-            mSettings = (Settings) o;
-        }
-    }
-
     public class SoundViewHolder extends RecyclerView.ViewHolder {
         public TextView mNameSound;
         public TextView mDurationSound;
         public ImageView mImageSound;
         public ImageButton mImgMore;
+        public View mView;
 
         public SoundViewHolder(View view) {
             super(view);
@@ -68,15 +67,13 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
             mDurationSound = itemView.findViewById(R.id.tv_duration_sound);
             mImageSound = itemView.findViewById(R.id.iv_image_sound);
             mImgMore = itemView.findViewById(R.id.imgMore);
-            DatabaseConnector db = new DatabaseConnector(mNameSound.getContext());
-            db.getSettings();
-
+            mView = view;
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Context context = mNameSound.getContext();
                     Intent intent = new Intent(context, AudioService.class);
-                    intent.putExtra("song", (int) view.getTag());
+                    intent.putExtra("songId", (int) view.getTag());
                     intent.setAction(AudioTask.ACTION_PLAY_SOUND);
                     context.startService(intent);
                 }
@@ -93,18 +90,19 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
                             Context c = mNameSound.getContext();
-                            DatabaseConnector db = new DatabaseConnector(c);
                             switch (item.toString()) {
-                                case "Edit": //TODO
+                                case "Edit":
                                     Intent intent = new Intent(c, MainActivity.class);
                                     c.startActivity(intent);
                                     break;
                                 case "Favorite":
-                                    mSettings.setFavoriteSong((int)item.getActionView().getTag());
-                                    db.editSettings(mSettings);
+                                    ContentValues content = new ContentValues();
+                                    content.put(SoundboardContract.SettingsEntry.FAVORITESOUND_KEY, (int)mView.getTag());
+                                    Uri uri = ContentUris.withAppendedId(BASE_CONTENT_URI.buildUpon().appendPath(PATH_SETTINGS).build(), 1);
+                                    c.getContentResolver().update(uri, content, null, null);
+                                    Toast.makeText(c, "Favorite sound set!", Toast.LENGTH_SHORT).show();
                                     break;
                                 case "Remove":
-                                    db.deleteSound((int)item.getActionView().getTag());
                                     break;
                             }
                             return true;
@@ -115,6 +113,7 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                 }
             });
         }
+
 
     }
 }

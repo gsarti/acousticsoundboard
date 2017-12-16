@@ -35,6 +35,7 @@ public class SoundboardProvider extends ContentProvider {
         uriMatcher.addURI(SoundboardContract.AUTHORITY, SoundboardContract.PATH_SOUNDS, SOUNDS);
         uriMatcher.addURI(SoundboardContract.AUTHORITY, SoundboardContract.PATH_SOUNDS + "/#", SOUND_WITH_ID);
         uriMatcher.addURI(SoundboardContract.AUTHORITY, SoundboardContract.PATH_SETTINGS, SETTINGS);
+        uriMatcher.addURI(SoundboardContract.AUTHORITY, SoundboardContract.PATH_SETTINGS + "/#", SETTINGS_WITH_ID);
         return uriMatcher;
     }
 
@@ -68,6 +69,14 @@ public class SoundboardProvider extends ContentProvider {
                 long id = db.insert(SoundboardContract.SoundEntry.TABLE_SOUNDS, null, values);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(SoundboardContract.SoundEntry.SOUND_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            case SETTINGS:
+                long idS = db.insert(SoundboardContract.SettingsEntry.TABLE_SETTINGS, null, values);
+                if (idS > 0) {
+                    returnUri = ContentUris.withAppendedId(SoundboardContract.SettingsEntry.SETTINGS_URI, idS);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -195,14 +204,14 @@ public class SoundboardProvider extends ContentProvider {
         return soundsDeleted;
     }
 
-    public int updateSettings(int id, Settings settings){
+    public int editSettings(int id, Settings settings){
         Uri uri = ContentUris.withAppendedId(SETTINGS_URI,id);
         ContentValues content = new ContentValues();
         content.put(SoundboardContract.SettingsEntry.FAVORITESOUND_KEY, settings.getFavoriteSong());
         return update(uri, content, null, null);
     }
 
-    public int updateSound(int id, Sound sound){
+    public int editSound(int id, Sound sound){
         Uri uri = ContentUris.withAppendedId(SOUND_URI, id);
         ContentValues contentValues = new ContentValues();
         contentValues.put(SoundboardContract.SoundEntry._ID, sound.getId());

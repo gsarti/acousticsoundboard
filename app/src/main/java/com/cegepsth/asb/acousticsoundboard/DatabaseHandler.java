@@ -17,8 +17,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final int DATABASE_REVISION = 1;
     public static final String DATABASE_NAME = "acousticdb";
 
-    private String[] seed = {"Wrong", "You spin me", "Jai ldoua", "Cegep STH", "Fin de Session"};
-
     public DatabaseHandler(Context context){
         super(context, DATABASE_NAME, null, DATABASE_REVISION);
     }
@@ -36,19 +34,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + FAVORITESOUND_KEY + " INTEGER)";
         db.execSQL(CREATE_SOUNDS_TABLE);
         db.execSQL(CREATE_SETTINGS_TABLE);
-        Seed(db);
-    }
-
-    public void Seed(SQLiteDatabase db){
-        // Settings
-        String setting = "INSERT INTO " + TABLE_SETTINGS + " VALUES (" + 0 + ", " + 1 + ")";
-        db.execSQL(setting);
-        // Default Sounds
-        for (int i = 1; i <= seed.length; i++){
-            String query = "INSERT INTO " + TABLE_SOUNDS + " (id,name,path,duration,image)\n" +
-                           "VALUES (" + i + ", '" + seed[i-1] + "', '" + seed[i-1] + "', 0, null );";
-            db.execSQL(query);
-        }
     }
 
     @Override
