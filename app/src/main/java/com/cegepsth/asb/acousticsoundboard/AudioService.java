@@ -17,16 +17,17 @@ public class AudioService extends IntentService{
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
-        String songName = intent.getStringExtra("song");
+        int songId = intent.getIntExtra("song",0);
         if (player == null){
-            createPlayer(songName, false);
+            createPlayer(songId, false);
         }
         AudioTask.executeTask(player, action);
     }
 
     // Helper to handle player state
-    public void createPlayer(String resource, boolean isURL) {
+    public void createPlayer(int id, boolean isURL) {
         if(isURL) {
+            //TODO Content resolver pour get le sound correspondant à l'id
             player = MediaPlayer.create(getApplicationContext(), Uri.parse(resource));
         } else {
             switch (resource) {

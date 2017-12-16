@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity implements AsyncDatabaseResp
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        new DatabaseConnector(this).getAllSounds();
+        DatabaseConnector db = new DatabaseConnector(this);
+        db.getAllSounds();
     }
 
     @Override

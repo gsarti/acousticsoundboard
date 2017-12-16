@@ -155,7 +155,7 @@ public class DatabaseConnector extends AsyncTask<DatabaseConnector.ActionToPerfo
                     cursor.moveToFirst();
                 settings = new Settings();
                 settings.setId(cursor.getInt(cursor.getColumnIndex(DatabaseHandler.ID_KEY)));
-                settings.setmWidgetSoundKeyt(cursor.getInt(cursor.getColumnIndex(DatabaseHandler.WIDGETSOUND_KEY)));
+                settings.setFavoriteSong(cursor.getInt(cursor.getColumnIndex(DatabaseHandler.WIDGETSOUND_KEY)));
                 cursor.close();
                 db.close();
                 return settings;
@@ -164,7 +164,7 @@ public class DatabaseConnector extends AsyncTask<DatabaseConnector.ActionToPerfo
                 settings = actionToPerforms[0].settings;
                 ContentValues content = new ContentValues();
                 content.put(DatabaseHandler.ID_KEY, settings.getId());
-                content.put(DatabaseHandler.WIDGETSOUND_KEY, settings.getmWidgetSoundKey());
+                content.put(DatabaseHandler.WIDGETSOUND_KEY, settings.getFavoriteSong());
                 db.update(DatabaseHandler.TABLE_SETTINGS, content, DatabaseHandler.ID_KEY + " =" + settings.getId(), null);
             default:
                 return null;

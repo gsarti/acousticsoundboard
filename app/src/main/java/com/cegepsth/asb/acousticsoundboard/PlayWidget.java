@@ -12,12 +12,18 @@ import android.widget.Toast;
 /**
  * Implementation of App Widget functionality.
  */
-public class PlayWidget extends AppWidgetProvider {
+public class PlayWidget extends AppWidgetProvider implements AsyncDatabaseResponse {
+
+    private Sound sound;
+    private Settings settings;
+    private static Context mContext;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
+        mContext = context;
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.play_widget);
+        DatabaseConnector db = new DatabaseConnector(context);
+        db.getSettings();
         Intent intent = new Intent(context, AudioService.class);
         intent.putExtra("song", "Jai ldoua");
         intent.setAction(AudioTask.ACTION_PLAY_SOUND);
@@ -43,6 +49,15 @@ public class PlayWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void processFinish(Object o) {
+        if (o instanceof Settings){
+            DatabaseConnector db = new DatabaseConnector(mContext);
+            db.getSound(((Settings) o).getFavoriteSong());
+        }
+
     }
 }
 

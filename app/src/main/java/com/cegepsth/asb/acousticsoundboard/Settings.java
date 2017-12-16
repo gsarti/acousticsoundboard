@@ -9,10 +9,10 @@ public class Settings {
     private int mWidgetSoundKey;
 
     public int getId() { return mId; }
-    public int getmWidgetSoundKey(){
+    public int getFavoriteSong(){
         return mWidgetSoundKey;
     }
 
     public void setId(int id) {mId = id;}
-    public void setmWidgetSoundKeyt(int key) {mWidgetSoundKey = key; }
+    public void setFavoriteSong(int key) {mWidgetSoundKey = key; }
 }
