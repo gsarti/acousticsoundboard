@@ -15,22 +15,24 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 1. ##	RecyclerView
 - [x] Permettre de visualiser l'ensemble des traces audio dans l'application.
 2. ##	Préférences Android
-- [ ] Changer le thème de l'application
-- [ ] Modifier la chanson par defaut du widget.
+- [x] Changer le thème de l'application
+- [x] Modifier la chanson par defaut du widget.
 3. ## SQLite
 - [x] Stocker l'information supplémentaire associée aux fichiers audio (image, description, date).
 4. ##	Content Provider (mode source et client)
-- [ ] D'autres application pourront visualiser les informations des audio contenus dans l'application.
+- [x] D'autres application pourront visualiser les informations des audio contenus dans l'application.
+- [x] Utiliser le provier en tant qu'interface interne avec la base de données.
 5. ##	Service et notifications
 - [x] Permettre de contrôler l'audio player de l'application.
+- [x] Notifications sur le changement d'un favori
 6. ##	DataBinding
-- [ ] Gérer l'affichage des informations associées aux traces audio et des options pour la langue de l'application.
+- [x] Gérer l'affichage du nom des traces audio.
 7. ##	Fragments (doit fonctionner dans les deux orientations, en mode Nexus9 et NexusOne)
 - [ ] Permettre un affichage simplifié en portrait et un affichage detaillé (l'image, la description...) dans l'orientation paysage.
 8. ##	Widgets
 - [x] Faire jouer un son favori à partir de l'écran d'accueil Android.
 9. ##	Manifeste et ressources (Icônes applicatives et multilinguisme français+anglais)
-- [x] Multilangue en francais et en anglais.
+- [] Multilangue en francais et en anglais.
 - [x] Icône personnalisée pour l'application.
 10. ##	Géolocalisation (mode au choix)
-- [ ] Dark theme en fonction de l'heure
+- [ ] Geofencing pour démarrer un audio au cégep

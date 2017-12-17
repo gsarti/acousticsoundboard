@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,12 +24,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.BASE_CONTENT_URI;
-import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.PATH_SOUNDS;
 import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.SoundEntry.SOUND_URI;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SoundboardAdapter.OnDeleteListener {
     private List<Sound> soundList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -53,24 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        Uri uri = SOUND_URI;
-        Sound sound;
-        List<Sound> soundList = new ArrayList<>();
-        Cursor cursor = getContentResolver().query(uri, null, null, null, SoundboardContract.SoundEntry.NAME_KEY);
-        if (cursor.moveToFirst()){
-            do {
-                sound = new Sound();
-                sound.setId(cursor.getInt(cursor.getColumnIndex(SoundboardContract.SoundEntry._ID)));
-                sound.setName(cursor.getString(cursor.getColumnIndex(SoundboardContract.SoundEntry.NAME_KEY)));
-                sound.setPath(cursor.getString(cursor.getColumnIndex(SoundboardContract.SoundEntry.PATH_KEY)));
-                sound.setDuration(cursor.getInt(cursor.getColumnIndex(SoundboardContract.SoundEntry.DURATION_KEY)));
-                sound.setImage(cursor.getBlob(cursor.getColumnIndex(SoundboardContract.SoundEntry.IMAGE_KEY)));
-                soundList.add(sound);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        mAdapter = new SoundboardAdapter(soundList);
-        mRecyclerView.setAdapter(mAdapter);
+        LoadUI();
     }
 
     @Override
@@ -157,5 +136,31 @@ public class MainActivity extends AppCompatActivity {
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         retriever.release();
         return Long.parseLong(time );
+    }
+
+    public void LoadUI(){
+        Uri uri = SOUND_URI;
+        Sound sound;
+        List<Sound> soundList = new ArrayList<>();
+        Cursor cursor = getContentResolver().query(uri, null, null, null, SoundboardContract.SoundEntry.NAME_KEY);
+        if (cursor.moveToFirst()){
+            do {
+                sound = new Sound();
+                sound.setId(cursor.getInt(cursor.getColumnIndex(SoundboardContract.SoundEntry._ID)));
+                sound.setName(cursor.getString(cursor.getColumnIndex(SoundboardContract.SoundEntry.NAME_KEY)));
+                sound.setPath(cursor.getString(cursor.getColumnIndex(SoundboardContract.SoundEntry.PATH_KEY)));
+                sound.setDuration(cursor.getInt(cursor.getColumnIndex(SoundboardContract.SoundEntry.DURATION_KEY)));
+                sound.setImage(cursor.getBlob(cursor.getColumnIndex(SoundboardContract.SoundEntry.IMAGE_KEY)));
+                soundList.add(sound);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        mAdapter = new SoundboardAdapter(this, soundList);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onDeleteClicked() {
+        LoadUI();
     }
 }
