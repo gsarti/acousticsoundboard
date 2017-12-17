@@ -10,6 +10,8 @@ public class AudioTask {
     public static final String ACTION_STOP_SOUND = "stop-sound";
     public static final String ACTION_PAUSE_SOUND = "pause-sound";
     public static final String ACTION_RESUME_SOUND = "resume-sound";
+    public static final String ACTION_PLAY_SOUND_REPEAT = "play-sound-repeat";
+    public static final String ACTION_SET_VOLUME = "set-volume";
 
     public static void executeTask(MediaPlayer player, String action) {
         switch (action){
@@ -27,6 +29,9 @@ public class AudioTask {
                 break;
             case ACTION_RESUME_SOUND:
                 resumeSound(player);
+                break;
+            case ACTION_PLAY_SOUND_REPEAT:
+                playSound(player);
                 break;
             default:
                 break;
@@ -48,5 +53,9 @@ public class AudioTask {
     private static void resumeSound(MediaPlayer player) {
         player.seekTo(player.getCurrentPosition());
         player.start();
+    }
+
+    public static void setVolume(MediaPlayer player, float volume){
+        player.setVolume(volume,volume);
     }
 }

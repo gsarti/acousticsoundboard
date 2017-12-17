@@ -30,7 +30,7 @@ import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.SoundEntry.
  * Created by Gabriele Sarti on 16-12-17.
  */
 
-public class EditSoundActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity {
 
     private Sound mSound;
     private EditText mName;
@@ -84,7 +84,7 @@ public class EditSoundActivity extends AppCompatActivity {
                 contentValues.put(SoundboardContract.SoundEntry.DURATION_KEY, mSound.getDuration());
                 contentValues.put(SoundboardContract.SoundEntry.IMAGE_KEY, mSound.getImage());
                 getContentResolver().update(uri, contentValues, null, null);
-                Toast.makeText(EditSoundActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditActivity.this, "Saved", Toast.LENGTH_SHORT).show();
             }
         });
         mChangeImage.setOnClickListener(new View.OnClickListener() {

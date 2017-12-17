@@ -1,37 +1,44 @@
 package com.cegepsth.asb.acousticsoundboard;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
+
 import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.SoundEntry.SOUND_URI;
 
-public class MainActivity extends AppCompatActivity implements SoundboardAdapter.OnDeleteListener {
-    private List<Sound> soundList = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private final String MAIN_FOLDER = "AcousticSounds";
+public class MainActivity extends AppCompatActivity {
+
+    FloatingActionButton btnAdd;
+    int CAPTURE_AUDIO = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,13 +50,24 @@ public class MainActivity extends AppCompatActivity implements SoundboardAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Setup();
-        ThemeManager.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_main);
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        LoadUI();
+        btnAdd = (FloatingActionButton) findViewById(R.id.btn_Add);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, CAPTURE_AUDIO);
+                } else {
+                    Toast.makeText(MainActivity.this, "Please install the app RecForger Lite to record", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        Setup();
+
+        MainFragment mainFragment = new MainFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.fl_main, mainFragment).commit();
     }
 
     @Override
@@ -58,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements SoundboardAdapter
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_play:
-                intent = new Intent(this, PlayerActivity.class);
+                intent = new Intent(this, DetailsActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.action_settings:
@@ -74,23 +92,23 @@ public class MainActivity extends AppCompatActivity implements SoundboardAdapter
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean("firstTime", false)) {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    try {
-                        createFile();
-                    } catch (IOException e) {
-                        Log.e("IOEXCEPTION_FILE", "Error creating resource files");
-                    }
-
-                } else {
-                    Log.e("STORAGE_ERROR", "No storage found");
+                try {
+                    createFile();
+                } catch (IOException e) {
+                    Log.e("IOEXCEPTION_FILE", "Error creating resource files");
                 }
-                ContentValues values = new ContentValues();
-                values.put(SoundboardContract.SettingsEntry.FAVORITESOUND_KEY, 1);
-                getContentResolver().insert(SoundboardContract.SettingsEntry.SETTINGS_URI, values);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("firstTime", true);
-                editor.commit();
+
+            } else {
+                Log.e("STORAGE_ERROR", "No storage found");
             }
+            ContentValues values = new ContentValues();
+            values.put(SoundboardContract.SettingsEntry.FAVORITESOUND_KEY, 1);
+            getContentResolver().insert(SoundboardContract.SettingsEntry.SETTINGS_URI, values);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTime", true);
+            editor.apply();
         }
+    }
 
     private void createFile()
             throws IOException {
@@ -100,8 +118,7 @@ public class MainActivity extends AppCompatActivity implements SoundboardAdapter
 
         Resources resources = getApplicationContext().getResources();
         byte[] largeBuffer = new byte[1024 * 4];
-        int totalBytes = 0;
-        int bytesRead = 0;
+        int bytesRead;
         for (int i = 0; i < inputRawResources.length; i++) {
             int resource = inputRawResources[i];
             String fileName = resource + ".mp3";
@@ -116,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements SoundboardAdapter
                     System.arraycopy(largeBuffer, 0, shortBuffer, 0, bytesRead);
                     outputStream.write(shortBuffer);
                 }
-                totalBytes += bytesRead;
             }
             inputStream.close();
             outputStream.flush();
@@ -124,43 +140,74 @@ public class MainActivity extends AppCompatActivity implements SoundboardAdapter
             ContentValues values = new ContentValues();
             values.put(SoundboardContract.SoundEntry.NAME_KEY, soundNames[i]);
             values.put(SoundboardContract.SoundEntry.PATH_KEY, file.getPath());
-            values.put(SoundboardContract.SoundEntry.DURATION_KEY, (int)getDuration(file));
+            values.put(SoundboardContract.SoundEntry.DURATION_KEY, (int) getDuration(file));
             values.put(SoundboardContract.SoundEntry.IMAGE_KEY, new byte[]{});
             getContentResolver().insert(SoundboardContract.SoundEntry.SOUND_URI, values);
         }
     }
 
-    public long getDuration(File file){
+    public long getDuration(File file) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(getApplicationContext(), Uri.fromFile(file));
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         retriever.release();
-        return Long.parseLong(time );
+        return Long.parseLong(time);
     }
 
-    public void LoadUI(){
-        Uri uri = SOUND_URI;
-        Sound sound;
-        List<Sound> soundList = new ArrayList<>();
-        Cursor cursor = getContentResolver().query(uri, null, null, null, SoundboardContract.SoundEntry.NAME_KEY);
-        if (cursor.moveToFirst()){
-            do {
-                sound = new Sound();
-                sound.setId(cursor.getInt(cursor.getColumnIndex(SoundboardContract.SoundEntry._ID)));
-                sound.setName(cursor.getString(cursor.getColumnIndex(SoundboardContract.SoundEntry.NAME_KEY)));
-                sound.setPath(cursor.getString(cursor.getColumnIndex(SoundboardContract.SoundEntry.PATH_KEY)));
-                sound.setDuration(cursor.getInt(cursor.getColumnIndex(SoundboardContract.SoundEntry.DURATION_KEY)));
-                sound.setImage(cursor.getBlob(cursor.getColumnIndex(SoundboardContract.SoundEntry.IMAGE_KEY)));
-                soundList.add(sound);
-            } while (cursor.moveToNext());
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == CAPTURE_AUDIO) {
+            final Uri uri = data.getData();
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Set sound name");
+            alert.setMessage("Please set the sound name:");
+
+            // Set an EditText view to get user input
+            final EditText input = new EditText(this);
+            alert.setView(input);
+
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String name = input.getText().toString();
+                    //try {
+                        String path = uri.getPath();
+                        Uri uri = SOUND_URI;
+                        ContentValues values = new ContentValues();
+                        values.put(SoundboardContract.SoundEntry.NAME_KEY, name);
+                        values.put(SoundboardContract.SoundEntry.PATH_KEY, path);
+                        values.put(SoundboardContract.SoundEntry.DURATION_KEY, 1000);
+                        values.put(SoundboardContract.SoundEntry.IMAGE_KEY, new byte[]{});
+                        getContentResolver().insert(uri, values);
+                    //} catch (IOException e){
+                        Log.e("IOERROR", "Error writing file");
+                   // }
+                    dialog.dismiss();
+                }
+            });
+
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    dialog.dismiss();
+                }
+            });
+
+            alert.show();
+
         }
-        cursor.close();
-        mAdapter = new SoundboardAdapter(this, soundList);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onDeleteClicked() {
-        LoadUI();
+    public File saveFile(Uri sourceuri, String fileName) throws IOException {
+        File dest = new File(getExternalFilesDir(null), fileName + ".mp3");
+        InputStream inputStream = getContentResolver().openInputStream(sourceuri);
+        OutputStream outputStream = new FileOutputStream(dest);
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while((length=inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer,0,length);
+        }
+        inputStream.close();
+        outputStream.flush();
+        outputStream.close();
+        return dest;
     }
+
 }

@@ -18,7 +18,7 @@ public class PlayWidget extends AppWidgetProvider {
                                 int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.play_widget);
         Intent intent = new Intent(context, AudioService.class);
-        intent.putExtra("songId", 0);
+        intent.putExtra("soundId", 0);
         intent.setAction(AudioTask.ACTION_PLAY_FAVORITE_SOUND);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.imgWidget, pendingIntent);

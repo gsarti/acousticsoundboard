@@ -1,7 +1,6 @@
 package com.cegepsth.asb.acousticsoundboard;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentUris;
@@ -12,7 +11,6 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
@@ -20,11 +18,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cegepsth.asb.acousticsoundboard.databinding.SoundItemBinding;
 
@@ -37,12 +35,14 @@ import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.SoundEntry.
 public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.SoundViewHolder> {
 
     private final OnDeleteListener mDeleteListener;
+    private final SoundClickListener mClickListener;
     private List<Sound> mListeSound;
     private SoundItemBinding binding;
 
     public SoundboardAdapter(OnDeleteListener listener, List<Sound> soundList) {
         mListeSound = soundList;
         mDeleteListener = listener;
+        mClickListener = (SoundClickListener)listener;
     }
 
     @Override
@@ -54,6 +54,10 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
 
     public interface OnDeleteListener {
         void onDeleteClicked();
+    }
+
+    public interface SoundClickListener {
+        void onListItemClick(int id);
     }
 
     @Override
@@ -75,7 +79,8 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
         return mListeSound.size();
     }
 
-    public class SoundViewHolder extends RecyclerView.ViewHolder implements OnDeleteListener {
+    public class SoundViewHolder extends RecyclerView.ViewHolder implements OnDeleteListener, View.OnClickListener
+    {
         public TextView mNameSound;
         public TextView mDurationSound;
         public ImageView mImageSound;
@@ -92,17 +97,8 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
             mImageSound = itemView.findViewById(R.id.iv_image_sound);
             mImgMore = itemView.findViewById(R.id.imgMore);
             mView = binding.getRoot();
-            mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Context context = mNameSound.getContext();
-                    Intent intent = new Intent(context, AudioService.class);
-                    intent.putExtra("songId", (int) view.getTag());
-                    intent.setAction(AudioTask.ACTION_PLAY_SOUND);
-                    context.startService(intent);
-                }
-            });
-            mImgMore.setOnClickListener(new View.OnClickListener() {
+            mView.setOnClickListener(this);
+            mImgMore.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Context ctx = view.getContext();
@@ -118,7 +114,7 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                             Uri uri;
                             switch (item.toString()) {
                                 case "Edit":
-                                    Intent intent = new Intent(c, EditSoundActivity.class);
+                                    Intent intent = new Intent(c, EditActivity.class);
                                     intent.putExtra("soundId", id);
                                     c.startActivity(intent);
                                     break;
@@ -127,13 +123,17 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                                     content.put(SoundboardContract.SettingsEntry.FAVORITESOUND_KEY, id);
                                     uri = ContentUris.withAppendedId(BASE_CONTENT_URI.buildUpon().appendPath(PATH_SETTINGS).build(), 1);
                                     c.getContentResolver().update(uri, content, null, null);
-                                    showNotification(id, c);
+                                    showNotification(c);
                                     break;
                                 case "Delete":
                                     uri = ContentUris.withAppendedId(SoundboardContract.SoundEntry.SOUND_URI, id);
                                     c.getContentResolver().delete(uri, null, null);
                                     mDeleteListener.onDeleteClicked();
                                     break;
+                                case "Details":
+                                    Intent i = new Intent(c, DetailsActivity.class);
+                                    i.putExtra(SoundboardContract.SoundEntry._ID, id);
+                                    c.startActivity(i);
                             }
                             return true;
                         }
@@ -145,21 +145,14 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
         }
 
         public void bind(Sound sound) {
-            binding.setSound(sound);
-            binding.executePendingBindings();
+            mBinding.setSound(sound);
+            mBinding.executePendingBindings();
         }
 
-        public void showNotification(int id, Context c){
-            Uri uri = ContentUris.withAppendedId(SOUND_URI, id);
-            String[] projection = new String[] {SoundboardContract.SoundEntry._ID, SoundboardContract.SoundEntry.NAME_KEY, SoundboardContract.SoundEntry.PATH_KEY, SoundboardContract.SoundEntry.DURATION_KEY, SoundboardContract.SoundEntry.IMAGE_KEY};
-            Cursor cursor = c.getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null)
-                cursor.moveToFirst();
-            String name = cursor.getString(cursor.getColumnIndex(SoundboardContract.SoundEntry.NAME_KEY));
-            byte[] image = cursor.getBlob(cursor.getColumnIndex(SoundboardContract.SoundEntry.IMAGE_KEY));
+        public void showNotification(Context c){
+            String name = mBinding.getSound().getName();
+            byte[] image = mBinding.getSound().getImage();
             Bitmap bmp = image.length > 0 ? BitmapFactory.decodeByteArray(image,0, image.length) : BitmapFactory.decodeResource(c.getResources(), R.mipmap.ic_launcher);
-            cursor.close();
-
             Intent i = new Intent(c, MainActivity.class);
             PendingIntent contentIntent = PendingIntent.getActivity(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder b = new NotificationCompat.Builder(c);
@@ -179,6 +172,11 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
 
         @Override
         public void onDeleteClicked() {
+        }
+
+        @Override
+        public void onClick(View view) {
+            mClickListener.onListItemClick(mBinding.getSound().getId());
         }
     }
 }

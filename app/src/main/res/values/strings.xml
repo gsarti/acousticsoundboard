@@ -12,4 +12,5 @@
     <string name="edit_sound">Edit</string>
     <string name="delete_sound">Delete</string>
     <string name="favorite_sound">Favorite</string>
+    <string name="details_sound">Details</string>
 </resources>
