@@ -85,6 +85,9 @@ public class EditSoundActivity extends AppCompatActivity {
                 contentValues.put(SoundboardContract.SoundEntry.IMAGE_KEY, mSound.getImage());
                 getContentResolver().update(uri, contentValues, null, null);
                 Toast.makeText(EditSoundActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(EditSoundActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         mChangeImage.setOnClickListener(new View.OnClickListener() {

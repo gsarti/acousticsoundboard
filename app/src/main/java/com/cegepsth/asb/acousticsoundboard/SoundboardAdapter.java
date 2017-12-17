@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -116,24 +117,26 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                             Context c = mNameSound.getContext();
                             int id = binding.getSound().getId();
                             Uri uri;
-                            switch (item.toString()) {
-                                case "Edit":
+                            switch (item.getItemId()) {
+                                case R.id.action_edit:
                                     Intent intent = new Intent(c, EditSoundActivity.class);
                                     intent.putExtra("soundId", id);
                                     c.startActivity(intent);
                                     break;
-                                case "Favorite":
+                                case R.id.action_favorite:
                                     ContentValues content = new ContentValues();
                                     content.put(SoundboardContract.SettingsEntry.FAVORITESOUND_KEY, id);
                                     uri = ContentUris.withAppendedId(BASE_CONTENT_URI.buildUpon().appendPath(PATH_SETTINGS).build(), 1);
                                     c.getContentResolver().update(uri, content, null, null);
                                     showNotification(id, c);
                                     break;
-                                case "Delete":
+                                case R.id.action_delete:
                                     uri = ContentUris.withAppendedId(SoundboardContract.SoundEntry.SOUND_URI, id);
                                     c.getContentResolver().delete(uri, null, null);
                                     mDeleteListener.onDeleteClicked();
                                     break;
+                                default:
+                                    Toast.makeText(c, "Une erreur est survenue!", Toast.LENGTH_SHORT).show();
                             }
                             return true;
                         }
@@ -169,7 +172,7 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(bmp)
                     .setContentTitle("New Acoustic favorite!")
-                    .setContentText("\"" + name + "\" is your new Acoustic favorite!")
+                    .setContentText("\"" + name + "\" " + R.string.favorite_notification)
                     .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
                     .setContentIntent(contentIntent)
                     .setContentInfo("Info");

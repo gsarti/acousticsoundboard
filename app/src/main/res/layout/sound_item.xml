@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="0dp"
-                    android:text="Secondes"
+                    android:text="@string/seconds"
                     card_view:layout_constraintLeft_toRightOf="@+id/tv_duration_sound"
                     card_view:layout_constraintTop_toTopOf="@+id/tv_duration_sound" />
 
