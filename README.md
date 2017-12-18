@@ -28,11 +28,21 @@ Notre projet final pour le cours de Développement d'applications en mobilité s
 6. ##	DataBinding
 - [x] Gérer l'affichage du nom des traces audio.
 7. ##	Fragments (doit fonctionner dans les deux orientations, en mode Nexus9 et NexusOne)
-- [ ] Permettre un affichage simplifié en portrait et un affichage detaillé (l'image, la description...) dans l'orientation paysage.
+- [x] Permettre un affichage simplifié en portrait et un affichage detaillé (l'image, la description...) dans l'orientation paysage.
 8. ##	Widgets
 - [x] Faire jouer un son favori à partir de l'écran d'accueil Android.
 9. ##	Manifeste et ressources (Icônes applicatives et multilinguisme français+anglais)
-- [] Multilangue en francais et en anglais.
+- [x] Multilangue en francais et en anglais.
 - [x] Icône personnalisée pour l'application.
 10. ##	Géolocalisation (mode au choix)
-- [ ] Geofencing pour démarrer un audio au cégep
+- [x] Geofencing pour démarrer un audio au cégep
+
+## Remarques pour la remise
+La clé à insérer pour le fonctionnement du Geofencing est: AIzaSyDyi2BegsUDfay17jOp7VVN-3Ku-sckSZQ. Normalement elle aurait été privée, mais on la fournit ici pour tester
+Le Geofencing semble être inconsistent, même si on s'est basé sur le fonctionnement du celui des cours.
+Les notifications fonctionnent pour l'API < 26, il fonctionnent parfois avec les API successifs.
+Les fragments ont été construits en se basant sur la tablette fourni par le cours, donc les dimensions sont susceptibles de changer avec d'autres dispositifs.
+L'application nécessite une application capable d'enregistrer le son. On conseille RecForge Lite.
+
+
+
