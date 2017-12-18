@@ -54,7 +54,6 @@ import java.util.List;
 import static com.cegepsth.asb.acousticsoundboard.SoundboardContract.SoundEntry.SOUND_URI;
 
 public class MainActivity extends AppCompatActivity implements
-        SoundboardAdapter.OnDeleteListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient mClient;
     private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     FloatingActionButton btnAdd;
+    MainFragment mMainFragment;
     int CAPTURE_AUDIO = 0;
 
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                     ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                     Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(intent, CAPTURE_AUDIO);
@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements
             });
         }
 
-        MainFragment mainFragment = new MainFragment();
+        mMainFragment = new MainFragment();
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.fl_main, mainFragment).commit();
+        manager.beginTransaction().replace(R.id.fl_main, mMainFragment).commit();
         ActivityCompat.requestPermissions(MainActivity.this,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_FINE_LOCATION);
 
@@ -206,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements
             String placeID = place.getId();
 
 
-
             String[] guids = new String[1];
             guids[0] = place.getId();
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient, guids);
@@ -236,16 +235,17 @@ public class MainActivity extends AppCompatActivity implements
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String name = input.getText().toString();
                     try {
-                    File file = saveFile(uri, name);
-                    Uri uri = SOUND_URI;
-                    ContentValues values = new ContentValues();
-                    values.put(SoundboardContract.SoundEntry.NAME_KEY, name);
-                    values.put(SoundboardContract.SoundEntry.PATH_KEY, file.getPath());
-                    values.put(SoundboardContract.SoundEntry.DURATION_KEY, (int)getDuration(file));
-                    values.put(SoundboardContract.SoundEntry.IMAGE_KEY, new byte[]{});
-                    getContentResolver().insert(uri, values);
-                    } catch (IOException e){
-                    Log.e("IOERROR", "Error writing file");
+                        File file = saveFile(uri, name);
+                        Uri uri = SOUND_URI;
+                        ContentValues values = new ContentValues();
+                        values.put(SoundboardContract.SoundEntry.NAME_KEY, name);
+                        values.put(SoundboardContract.SoundEntry.PATH_KEY, file.getPath());
+                        values.put(SoundboardContract.SoundEntry.DURATION_KEY, (int) getDuration(file));
+                        values.put(SoundboardContract.SoundEntry.IMAGE_KEY, new byte[]{});
+                        getContentResolver().insert(uri, values);
+                        mMainFragment.LoadUI();
+                    } catch (IOException e) {
+                        Log.e("IOERROR", "Error writing file");
                     }
                     dialog.dismiss();
                 }
@@ -327,16 +327,11 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onDeleteClicked() {
-
-    }
-
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Audio.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Audio.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);

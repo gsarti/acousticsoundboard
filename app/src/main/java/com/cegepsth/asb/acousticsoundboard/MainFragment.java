@@ -67,6 +67,7 @@ public class MainFragment extends Fragment implements SoundboardAdapter.OnDelete
     public void LoadUI(){
         Uri uri = SOUND_URI;
         Sound sound;
+        soundList.clear();
         Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, SoundboardContract.SoundEntry.NAME_KEY);
         if (cursor.moveToFirst()){
             do {
