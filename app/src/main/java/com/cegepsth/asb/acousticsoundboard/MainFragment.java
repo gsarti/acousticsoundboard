@@ -1,18 +1,27 @@
 package com.cegepsth.asb.acousticsoundboard;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +41,7 @@ public class MainFragment extends Fragment implements SoundboardAdapter.OnDelete
     private RecyclerView.LayoutManager mLayoutManager;
     private Context mContext;
 
+
     public MainFragment() {
     }
 
@@ -48,8 +58,9 @@ public class MainFragment extends Fragment implements SoundboardAdapter.OnDelete
         LoadUI();
         if (getActivity().findViewById(R.id.main_landscape) != null)
             mTwoPane = true;
-        else
+        else{
             mTwoPane = false;
+        }
         return v;
     }
 

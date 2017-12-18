@@ -1,12 +1,4 @@
 package com.cegepsth.asb.acousticsoundboard;
-import android.databinding.BindingAdapter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-
-import java.io.ByteArrayOutputStream;
 
 public class Sound {
 

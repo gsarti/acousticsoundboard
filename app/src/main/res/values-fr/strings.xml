@@ -4,8 +4,22 @@
     <string name="main_menu">Menu</string>
     <string name="edit">Modifier</string>
     <string name="language">Langue</string>
-    <string name="theme">Theme</string>
-    <string name="themeDark">Theme Foncé</string>
-    <string name="themeLight">Theme Clair</string>
-    <string name="settings">Réglage</string>
+
+    <string name="settings">Réglages</string>
+    <string name="theme">Thème</string>
+    <string name="themeDark">Thème Foncé</string>
+    <string name="themeLight">Thème Clair</string>
+
+    <string name="seconds">Secondes</string>
+    <string name="geofence">Géoperimètre</string>
+
+    <string name="edit_sound">Modifier</string>
+    <string name="delete_sound">Supprimer</string>
+    <string name="favorite_sound">Favori</string>
+    <string name="details_sound">Détail</string>
+
+    <string name="favorite_notification">est votre nouveau son favori!</string>
+
+    <string name="change_image">Changer l\'image</string>
+    <string name="save_sound">Sauvegarder</string>
 </resources>

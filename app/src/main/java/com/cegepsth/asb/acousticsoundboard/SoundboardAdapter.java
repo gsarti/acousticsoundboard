@@ -12,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cegepsth.asb.acousticsoundboard.databinding.SoundItemBinding;
 
@@ -106,34 +108,36 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                     menu.getMenuInflater()
                             .inflate(R.menu.more, menu.getMenu());
 
-                    //registering popup with OnMenuItemClickListener
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
                             Context c = mNameSound.getContext();
                             int id = binding.getSound().getId();
                             Uri uri;
-                            switch (item.toString()) {
-                                case "Edit":
+                            switch (item.getItemId()) {
+                                case R.id.action_edit:
                                     Intent intent = new Intent(c, EditActivity.class);
                                     intent.putExtra("soundId", id);
                                     c.startActivity(intent);
                                     break;
-                                case "Favorite":
+                                case R.id.action_favorite:
                                     ContentValues content = new ContentValues();
                                     content.put(SoundboardContract.SettingsEntry.FAVORITESOUND_KEY, id);
                                     uri = ContentUris.withAppendedId(BASE_CONTENT_URI.buildUpon().appendPath(PATH_SETTINGS).build(), 1);
                                     c.getContentResolver().update(uri, content, null, null);
                                     showNotification(c);
                                     break;
-                                case "Delete":
+                                case R.id.action_delete:
                                     uri = ContentUris.withAppendedId(SoundboardContract.SoundEntry.SOUND_URI, id);
                                     c.getContentResolver().delete(uri, null, null);
                                     mDeleteListener.onDeleteClicked();
                                     break;
-                                case "Details":
+                                case R.id.action_details:
                                     Intent i = new Intent(c, DetailsActivity.class);
                                     i.putExtra(SoundboardContract.SoundEntry._ID, id);
                                     c.startActivity(i);
+                                    break;
+                                default:
+                                    Toast.makeText(c, "Une erreur est survenue!", Toast.LENGTH_SHORT).show();
                             }
                             return true;
                         }
@@ -162,7 +166,7 @@ public class SoundboardAdapter extends RecyclerView.Adapter<SoundboardAdapter.So
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(bmp)
                     .setContentTitle("New Acoustic favorite!")
-                    .setContentText("\"" + name + "\" is your new Acoustic favorite!")
+                    .setContentText("\"" + name + "\" " + R.string.favorite_notification)
                     .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
                     .setContentIntent(contentIntent)
                     .setContentInfo("Info");

@@ -9,8 +9,15 @@
     <string name="settings">Settings</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+    <string name="seconds">Seconds</string>
+    <string name="geofence">Geofence</string>
+
     <string name="edit_sound">Edit</string>
     <string name="delete_sound">Delete</string>
     <string name="favorite_sound">Favorite</string>
     <string name="details_sound">Details</string>
+    <string name="favorite_notification">is your new Acoustic favorite!</string>
+    <string name="change_image">Change image</string>
+    <string name="save_sound">Save</string>
 </resources>

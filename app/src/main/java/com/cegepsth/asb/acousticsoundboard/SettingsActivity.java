@@ -22,7 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
     Activity activity;
     RadioButton radioDarkTheme;
     RadioButton radioLightTheme;
-    Button btnUpdate;
 
     @Override
     public void onBackPressed() {
